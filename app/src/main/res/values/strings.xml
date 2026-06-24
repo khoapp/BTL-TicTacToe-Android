@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">TicTacToe</string>
+    <string name="login">Đăng Nhập</string>
+    <string name="register">Đăng Ký</string>
+    <string name="email">Email</string>
+    <string name="password">Mật khẩu</string>
+    <string name="username">Tên hiển thị</string>
+    <string name="play_ai">Chơi vs Máy Tính</string>
+    <string name="play_pvp">Chơi 2 Người</string>
+    <string name="history">Lịch Sử</string>
+    <string name="settings">Cài Đặt</string>
+    <string name="restart">Chơi Lại</string>
+    <string name="back_menu">Về Menu</string>
+    <string name="win">THẮNG</string>
+    <string name="lose">THUA</string>
+    <string name="draw">HÒA</string>
+    <string name="turn_of">Lượt của</string>
+    <string name="logout">Đăng Xuất</string>
+</resources>

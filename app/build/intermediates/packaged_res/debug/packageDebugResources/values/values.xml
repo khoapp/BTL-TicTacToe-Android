@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="accent">#00897B</color>
+    <color name="background_light">#F5F5F5</color>
+    <color name="cell_border">#BDBDBD</color>
+    <color name="draw_color">#FF9800</color>
+    <color name="lose_color">#F44336</color>
+    <color name="primary">#1565C0</color>
+    <color name="primary_dark">#0D47A1</color>
+    <color name="primary_light">#E3F2FD</color>
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="white">#FFFFFF</color>
+    <color name="win_color">#4CAF50</color>
+    <string name="app_name">TicTacToe</string>
+    <string name="back_menu">Về Menu</string>
+    <string name="draw">HÒA</string>
+    <string name="email">Email</string>
+    <string name="history">Lịch Sử</string>
+    <string name="login">Đăng Nhập</string>
+    <string name="logout">Đăng Xuất</string>
+    <string name="lose">THUA</string>
+    <string name="password">Mật khẩu</string>
+    <string name="play_ai">Chơi vs Máy Tính</string>
+    <string name="play_pvp">Chơi 2 Người</string>
+    <string name="register">Đăng Ký</string>
+    <string name="restart">Chơi Lại</string>
+    <string name="settings">Cài Đặt</string>
+    <string name="turn_of">Lượt của</string>
+    <string name="username">Tên hiển thị</string>
+    <string name="win">THẮNG</string>
+    <style name="Base.Theme.TicTacToe" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="android:statusBarColor">@color/primary_dark</item>
+    </style>
+    <style name="Theme.TicTacToe" parent="Base.Theme.TicTacToe"/>
+    <style name="Theme.TicTacToe.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="android:statusBarColor">@color/primary_dark</item>
+    </style>
+    <style name="Theme.TicTacToe.Splash" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="android:statusBarColor">@color/primary_dark</item>
+        <item name="android:windowBackground">@color/primary_dark</item>
+    </style>
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#1565C0</color>
+    <color name="primary_dark">#0D47A1</color>
+    <color name="primary_light">#E3F2FD</color>
+    <color name="accent">#00897B</color>
+    <color name="white">#FFFFFF</color>
+    <color name="background_light">#F5F5F5</color>
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="win_color">#4CAF50</color>
+    <color name="lose_color">#F44336</color>
+    <color name="draw_color">#FF9800</color>
+    <color name="cell_border">#BDBDBD</color>
+</resources>

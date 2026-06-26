@@ -6,23 +6,11 @@ public class TicTacToeGame {
     public static final int PLAYER_O = 2;
     public static final int EMPTY = 0;
 
-    // 8 tổ hợp thắng
-    private static final int[][] WIN_COMBINATIONS = {
-            {0, 1, 2}, // Hàng 1
-            {3, 4, 5}, // Hàng 2
-            {6, 7, 8}, // Hàng 3
-            {0, 3, 6}, // Cột 1
-            {1, 4, 7}, // Cột 2
-            {2, 5, 8}, // Cột 3
-            {0, 4, 8}, // Đường chéo chính
-            {2, 4, 6}  // Đường chéo phụ
-    };
-
-    private int[] board;         // 9 ô bàn cờ
+    private int[] board;         // 25 ô bàn cờ (5x5)
     private int currentPlayer;   // Người đang đánh (PLAYER_X hoặc PLAYER_O)
     private int movesCount;      // Số nước đã đi
     private int winner;          // Người thắng (0 = chưa có)
-    private int[] winningLine;   // 3 ô tạo thành đường thắng (để highlight)
+    private int[] winningLine;   // 4 ô tạo thành đường thắng (để highlight)
 
     public TicTacToeGame() {
         reset();
@@ -32,7 +20,7 @@ public class TicTacToeGame {
      * Đặt lại bàn cờ
      */
     public void reset() {
-        board = new int[9];
+        board = new int[25];
         currentPlayer = PLAYER_X;
         movesCount = 0;
         winner = 0;
@@ -40,11 +28,11 @@ public class TicTacToeGame {
     }
 
     /**
-     * Thực hiện nước đi tại vị trí position (0-8)
+     * Thực hiện nước đi tại vị trí position (0-24)
      * @return true nếu hợp lệ, false nếu ô đã có quân
      */
     public boolean makeMove(int position) {
-        if (position < 0 || position > 8) return false;
+        if (position < 0 || position > 24) return false;
         if (board[position] != EMPTY) return false;
         if (winner != 0) return false;
 
@@ -59,17 +47,52 @@ public class TicTacToeGame {
     }
 
     /**
-     * Kiểm tra xem đã có người thắng chưa
+     * Kiểm tra xem đã có người thắng chưa (4 ô liên tiếp)
      * @return true nếu có người thắng
      */
     public boolean checkWinner() {
-        for (int[] combo : WIN_COMBINATIONS) {
-            if (board[combo[0]] != EMPTY &&
-                board[combo[0]] == board[combo[1]] &&
-                board[combo[1]] == board[combo[2]]) {
-                winner = board[combo[0]];
-                winningLine = combo;
-                return true;
+        int n = 5;
+        for (int r = 0; r < n; r++) {
+            for (int c = 0; c < n; c++) {
+                int player = board[r * n + c];
+                if (player == EMPTY) continue;
+
+                // Ngang
+                if (c <= n - 4 &&
+                    player == board[r * n + c + 1] &&
+                    player == board[r * n + c + 2] &&
+                    player == board[r * n + c + 3]) {
+                    winner = player;
+                    winningLine = new int[]{r * n + c, r * n + c + 1, r * n + c + 2, r * n + c + 3};
+                    return true;
+                }
+                // Dọc
+                if (r <= n - 4 &&
+                    player == board[(r + 1) * n + c] &&
+                    player == board[(r + 2) * n + c] &&
+                    player == board[(r + 3) * n + c]) {
+                    winner = player;
+                    winningLine = new int[]{r * n + c, (r + 1) * n + c, (r + 2) * n + c, (r + 3) * n + c};
+                    return true;
+                }
+                // Chéo chính
+                if (r <= n - 4 && c <= n - 4 &&
+                    player == board[(r + 1) * n + c + 1] &&
+                    player == board[(r + 2) * n + c + 2] &&
+                    player == board[(r + 3) * n + c + 3]) {
+                    winner = player;
+                    winningLine = new int[]{r * n + c, (r + 1) * n + c + 1, (r + 2) * n + c + 2, (r + 3) * n + c + 3};
+                    return true;
+                }
+                // Chéo phụ
+                if (r <= n - 4 && c >= 3 &&
+                    player == board[(r + 1) * n + c - 1] &&
+                    player == board[(r + 2) * n + c - 2] &&
+                    player == board[(r + 3) * n + c - 3]) {
+                    winner = player;
+                    winningLine = new int[]{r * n + c, (r + 1) * n + c - 1, (r + 2) * n + c - 2, (r + 3) * n + c - 3};
+                    return true;
+                }
             }
         }
         return false;
@@ -79,7 +102,7 @@ public class TicTacToeGame {
      * Kiểm tra hòa
      */
     public boolean isDraw() {
-        return movesCount == 9 && winner == 0;
+        return movesCount == 25 && winner == 0;
     }
 
     /**

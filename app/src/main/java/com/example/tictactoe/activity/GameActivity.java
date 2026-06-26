@@ -84,14 +84,16 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void setupBoard() {
-        cellButtons = new Button[9];
+        cellButtons = new Button[25];
         int[] cellIds = {
-                R.id.cell0, R.id.cell1, R.id.cell2,
-                R.id.cell3, R.id.cell4, R.id.cell5,
-                R.id.cell6, R.id.cell7, R.id.cell8
+                R.id.cell0, R.id.cell1, R.id.cell2, R.id.cell3, R.id.cell4,
+                R.id.cell5, R.id.cell6, R.id.cell7, R.id.cell8, R.id.cell9,
+                R.id.cell10, R.id.cell11, R.id.cell12, R.id.cell13, R.id.cell14,
+                R.id.cell15, R.id.cell16, R.id.cell17, R.id.cell18, R.id.cell19,
+                R.id.cell20, R.id.cell21, R.id.cell22, R.id.cell23, R.id.cell24
         };
 
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 25; i++) {
             final int pos = i;
             cellButtons[i] = findViewById(cellIds[i]);
             cellButtons[i].setOnClickListener(v -> handleCellClick(pos));
@@ -232,7 +234,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void setBoardEnabled(boolean enabled) {
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 25; i++) {
             if (game.isCellEmpty(i)) {
                 cellButtons[i].setEnabled(enabled);
             }

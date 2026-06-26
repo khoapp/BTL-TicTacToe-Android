@@ -124,13 +124,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Game Board: GridLayout 3x3 -->
+    <!-- Game Board: GridLayout 5x5 -->
     <GridLayout
         android:id="@+id/gameBoard"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:rowCount="3"
-        android:columnCount="3"
+        android:rowCount="5"
+        android:columnCount="5"
         android:padding="16dp"
         android:useDefaultMargins="false"
         app:layout_constraintTop_toBottomOf="@id/tvTurnInfo"
@@ -140,71 +140,39 @@
         app:layout_constraintDimensionRatio="1:1">
 
         <!-- Row 0 -->
-        <Button android:id="@+id/cell0"
-            android:layout_width="0dp" android:layout_height="0dp"
-            android:layout_columnWeight="1" android:layout_rowWeight="1"
-            android:text="" android:textSize="40sp" android:textStyle="bold"
-            android:backgroundTint="@color/white"
-            android:layout_margin="4dp"
-            android:background="@drawable/cell_background"/>
-
-        <Button android:id="@+id/cell1"
-            android:layout_width="0dp" android:layout_height="0dp"
-            android:layout_columnWeight="1" android:layout_rowWeight="1"
-            android:text="" android:textSize="40sp" android:textStyle="bold"
-            android:layout_margin="4dp"
-            android:background="@drawable/cell_background"/>
-
-        <Button android:id="@+id/cell2"
-            android:layout_width="0dp" android:layout_height="0dp"
-            android:layout_columnWeight="1" android:layout_rowWeight="1"
-            android:text="" android:textSize="40sp" android:textStyle="bold"
-            android:layout_margin="4dp"
-            android:background="@drawable/cell_background"/>
+        <Button android:id="@+id/cell0" android:layout_width="0dp" android:layout_height="0dp" android:layout_columnWeight="1" android:layout_rowWeight="1" android:text="" android:textSize="28sp" android:textStyle="bold" android:layout_margin="2dp" android:background="@drawable/cell_background" android:padding="0dp"/>
+        <Button android:id="@+id/cell1" android:layout_width="0dp" android:layout_height="0dp" android:layout_columnWeight="1" android:layout_rowWeight="1" android:text="" android:textSize="28sp" android:textStyle="bold" android:layout_margin="2dp" android:background="@drawable/cell_background" android:padding="0dp"/>
+        <Button android:id="@+id/cell2" android:layout_width="0dp" android:layout_height="0dp" android:layout_columnWeight="1" android:layout_rowWeight="1" android:text="" android:textSize="28sp" android:textStyle="bold" android:layout_margin="2dp" android:background="@drawable/cell_background" android:padding="0dp"/>
+        <Button android:id="@+id/cell3" android:layout_width="0dp" android:layout_height="0dp" android:layout_columnWeight="1" android:layout_rowWeight="1" android:text="" android:textSize="28sp" android:textStyle="bold" android:layout_margin="2dp" android:background="@drawable/cell_background" android:padding="0dp"/>
+        <Button android:id="@+id/cell4" android:layout_width="0dp" android:layout_height="0dp" android:layout_columnWeight="1" android:layout_rowWeight="1" android:text="" android:textSize="28sp" android:textStyle="bold" android:layout_margin="2dp" android:background="@drawable/cell_background" android:padding="0dp"/>
 
         <!-- Row 1 -->
-        <Button android:id="@+id/cell3"
-            android:layout_width="0dp" android:layout_height="0dp"
-            android:layout_columnWeight="1" android:layout_rowWeight="1"
-            android:text="" android:textSize="40sp" android:textStyle="bold"
-            android:layout_margin="4dp"
-            android:background="@drawable/cell_background"/>
-
-        <Button android:id="@+id/cell4"
-            android:layout_width="0dp" android:layout_height="0dp"
-            android:layout_columnWeight="1" android:layout_rowWeight="1"
-            android:text="" android:textSize="40sp" android:textStyle="bold"
-            android:layout_margin="4dp"
-            android:background="@drawable/cell_background"/>
-
-        <Button android:id="@+id/cell5"
-            android:layout_width="0dp" android:layout_height="0dp"
-            android:layout_columnWeight="1" android:layout_rowWeight="1"
-            android:text="" android:textSize="40sp" android:textStyle="bold"
-            android:layout_margin="4dp"
-            android:background="@drawable/cell_background"/>
+        <Button android:id="@+id/cell5" android:layout_width="0dp" android:layout_height="0dp" android:layout_columnWeight="1" android:layout_rowWeight="1" android:text="" android:textSize="28sp" android:textStyle="bold" android:layout_margin="2dp" android:background="@drawable/cell_background" android:padding="0dp"/>
+        <Button android:id="@+id/cell6" android:layout_width="0dp" android:layout_height="0dp" android:layout_columnWeight="1" android:layout_rowWeight="1" android:text="" android:textSize="28sp" android:textStyle="bold" android:layout_margin="2dp" android:background="@drawable/cell_background" android:padding="0dp"/>
+        <Button android:id="@+id/cell7" android:layout_width="0dp" android:layout_height="0dp" android:layout_columnWeight="1" android:layout_rowWeight="1" android:text="" android:textSize="28sp" android:textStyle="bold" android:layout_margin="2dp" android:background="@drawable/cell_background" android:padding="0dp"/>
+        <Button android:id="@+id/cell8" android:layout_width="0dp" android:layout_height="0dp" android:layout_columnWeight="1" android:layout_rowWeight="1" android:text="" android:textSize="28sp" android:textStyle="bold" android:layout_margin="2dp" android:background="@drawable/cell_background" android:padding="0dp"/>
+        <Button android:id="@+id/cell9" android:layout_width="0dp" android:layout_height="0dp" android:layout_columnWeight="1" android:layout_rowWeight="1" android:text="" android:textSize="28sp" android:textStyle="bold" android:layout_margin="2dp" android:background="@drawable/cell_background" android:padding="0dp"/>
 
         <!-- Row 2 -->
-        <Button android:id="@+id/cell6"
-            android:layout_width="0dp" android:layout_height="0dp"
-            android:layout_columnWeight="1" android:layout_rowWeight="1"
-            android:text="" android:textSize="40sp" android:textStyle="bold"
-            android:layout_margin="4dp"
-            android:background="@drawable/cell_background"/>
+        <Button android:id="@+id/cell10" android:layout_width="0dp" android:layout_height="0dp" android:layout_columnWeight="1" android:layout_rowWeight="1" android:text="" android:textSize="28sp" android:textStyle="bold" android:layout_margin="2dp" android:background="@drawable/cell_background" android:padding="0dp"/>
+        <Button android:id="@+id/cell11" android:layout_width="0dp" android:layout_height="0dp" android:layout_columnWeight="1" android:layout_rowWeight="1" android:text="" android:textSize="28sp" android:textStyle="bold" android:layout_margin="2dp" android:background="@drawable/cell_background" android:padding="0dp"/>
+        <Button android:id="@+id/cell12" android:layout_width="0dp" android:layout_height="0dp" android:layout_columnWeight="1" android:layout_rowWeight="1" android:text="" android:textSize="28sp" android:textStyle="bold" android:layout_margin="2dp" android:background="@drawable/cell_background" android:padding="0dp"/>
+        <Button android:id="@+id/cell13" android:layout_width="0dp" android:layout_height="0dp" android:layout_columnWeight="1" android:layout_rowWeight="1" android:text="" android:textSize="28sp" android:textStyle="bold" android:layout_margin="2dp" android:background="@drawable/cell_background" android:padding="0dp"/>
+        <Button android:id="@+id/cell14" android:layout_width="0dp" android:layout_height="0dp" android:layout_columnWeight="1" android:layout_rowWeight="1" android:text="" android:textSize="28sp" android:textStyle="bold" android:layout_margin="2dp" android:background="@drawable/cell_background" android:padding="0dp"/>
 
-        <Button android:id="@+id/cell7"
-            android:layout_width="0dp" android:layout_height="0dp"
-            android:layout_columnWeight="1" android:layout_rowWeight="1"
-            android:text="" android:textSize="40sp" android:textStyle="bold"
-            android:layout_margin="4dp"
-            android:background="@drawable/cell_background"/>
+        <!-- Row 3 -->
+        <Button android:id="@+id/cell15" android:layout_width="0dp" android:layout_height="0dp" android:layout_columnWeight="1" android:layout_rowWeight="1" android:text="" android:textSize="28sp" android:textStyle="bold" android:layout_margin="2dp" android:background="@drawable/cell_background" android:padding="0dp"/>
+        <Button android:id="@+id/cell16" android:layout_width="0dp" android:layout_height="0dp" android:layout_columnWeight="1" android:layout_rowWeight="1" android:text="" android:textSize="28sp" android:textStyle="bold" android:layout_margin="2dp" android:background="@drawable/cell_background" android:padding="0dp"/>
+        <Button android:id="@+id/cell17" android:layout_width="0dp" android:layout_height="0dp" android:layout_columnWeight="1" android:layout_rowWeight="1" android:text="" android:textSize="28sp" android:textStyle="bold" android:layout_margin="2dp" android:background="@drawable/cell_background" android:padding="0dp"/>
+        <Button android:id="@+id/cell18" android:layout_width="0dp" android:layout_height="0dp" android:layout_columnWeight="1" android:layout_rowWeight="1" android:text="" android:textSize="28sp" android:textStyle="bold" android:layout_margin="2dp" android:background="@drawable/cell_background" android:padding="0dp"/>
+        <Button android:id="@+id/cell19" android:layout_width="0dp" android:layout_height="0dp" android:layout_columnWeight="1" android:layout_rowWeight="1" android:text="" android:textSize="28sp" android:textStyle="bold" android:layout_margin="2dp" android:background="@drawable/cell_background" android:padding="0dp"/>
 
-        <Button android:id="@+id/cell8"
-            android:layout_width="0dp" android:layout_height="0dp"
-            android:layout_columnWeight="1" android:layout_rowWeight="1"
-            android:text="" android:textSize="40sp" android:textStyle="bold"
-            android:layout_margin="4dp"
-            android:background="@drawable/cell_background"/>
+        <!-- Row 4 -->
+        <Button android:id="@+id/cell20" android:layout_width="0dp" android:layout_height="0dp" android:layout_columnWeight="1" android:layout_rowWeight="1" android:text="" android:textSize="28sp" android:textStyle="bold" android:layout_margin="2dp" android:background="@drawable/cell_background" android:padding="0dp"/>
+        <Button android:id="@+id/cell21" android:layout_width="0dp" android:layout_height="0dp" android:layout_columnWeight="1" android:layout_rowWeight="1" android:text="" android:textSize="28sp" android:textStyle="bold" android:layout_margin="2dp" android:background="@drawable/cell_background" android:padding="0dp"/>
+        <Button android:id="@+id/cell22" android:layout_width="0dp" android:layout_height="0dp" android:layout_columnWeight="1" android:layout_rowWeight="1" android:text="" android:textSize="28sp" android:textStyle="bold" android:layout_margin="2dp" android:background="@drawable/cell_background" android:padding="0dp"/>
+        <Button android:id="@+id/cell23" android:layout_width="0dp" android:layout_height="0dp" android:layout_columnWeight="1" android:layout_rowWeight="1" android:text="" android:textSize="28sp" android:textStyle="bold" android:layout_margin="2dp" android:background="@drawable/cell_background" android:padding="0dp"/>
+        <Button android:id="@+id/cell24" android:layout_width="0dp" android:layout_height="0dp" android:layout_columnWeight="1" android:layout_rowWeight="1" android:text="" android:textSize="28sp" android:textStyle="bold" android:layout_margin="2dp" android:background="@drawable/cell_background" android:padding="0dp"/>
 
     </GridLayout>
 

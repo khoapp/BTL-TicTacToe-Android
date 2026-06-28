@@ -13,11 +13,88 @@ public class AIPlayer {
                 : TicTacToeGame.PLAYER_X;
     }
 
+    public static class AIAction {
+        public int skillToUse = -1; // -1: không dùng, 0: Block, 1: Destroy, 2: DoubleMove
+        public int destroyPosition = -1;
+        public int bestMove = -1;
+    }
+
+    public AIAction getBestAction(int[] board, boolean[] aiSkillsUsed) {
+        AIAction action = new AIAction();
+        action.bestMove = getBestMove(board);
+        
+        int currentScore = evaluateBoard(board);
+        
+        // 1. Kiểm tra nguy hiểm: Nếu điểm số hiện tại rất thấp (người chơi sắp thắng)
+        if (currentScore <= -100) {
+            // Ưu tiên dùng Destroy nếu chưa dùng
+            if (!aiSkillsUsed[TicTacToeGame.SKILL_DESTROY]) {
+                int bestDestroyPos = -1;
+                int bestDestroyScore = currentScore;
+                
+                for (int i = 0; i < 25; i++) {
+                    if (board[i] == humanPlayer) {
+                        board[i] = TicTacToeGame.EMPTY;
+                        int newScore = evaluateBoard(board);
+                        board[i] = humanPlayer;
+                        
+                        if (newScore > bestDestroyScore) {
+                            bestDestroyScore = newScore;
+                            bestDestroyPos = i;
+                        }
+                    }
+                }
+                
+                if (bestDestroyPos != -1 && bestDestroyScore > currentScore + 50) {
+                    action.skillToUse = TicTacToeGame.SKILL_DESTROY;
+                    action.destroyPosition = bestDestroyPos;
+                    action.bestMove = -1; 
+                    return action;
+                }
+            }
+            
+            // Nếu không dùng được Destroy hoặc Destroy không đủ hiệu quả, dùng Block
+            if (!aiSkillsUsed[TicTacToeGame.SKILL_BLOCK]) {
+                action.skillToUse = TicTacToeGame.SKILL_BLOCK;
+                return action;
+            }
+        }
+        
+        // 2. Cơ hội tấn công bằng Double Move
+        if (!aiSkillsUsed[TicTacToeGame.SKILL_DOUBLE_MOVE]) {
+            if (action.bestMove != -1 && board[action.bestMove] == TicTacToeGame.EMPTY) {
+                board[action.bestMove] = aiPlayer;
+                if (checkWinner(board) != aiPlayer) { 
+                    int secondMove = getBestMove(board);
+                    if (secondMove != -1) {
+                        board[secondMove] = aiPlayer;
+                        if (checkWinner(board) == aiPlayer) {
+                            action.skillToUse = TicTacToeGame.SKILL_DOUBLE_MOVE;
+                        }
+                        board[secondMove] = TicTacToeGame.EMPTY;
+                    }
+                }
+                board[action.bestMove] = TicTacToeGame.EMPTY;
+                
+                if (action.skillToUse == TicTacToeGame.SKILL_DOUBLE_MOVE) {
+                    return action;
+                }
+            }
+        }
+        
+        // 3. Dùng ngẫu nhiên Block nếu có lợi thế nhẹ
+        if (!aiSkillsUsed[TicTacToeGame.SKILL_BLOCK] && currentScore >= 10 && Math.random() < 0.2) {
+            action.skillToUse = TicTacToeGame.SKILL_BLOCK;
+        }
+
+        return action;
+    }
+
     public int getBestMove(int[] board) {
         int bestScore = Integer.MIN_VALUE;
         int bestMove = -1;
 
-        // Ưu tiên duyệt các ô ở giữa trước để cắt tỉa Alpha-Beta nhanh hơn (heuristic move ordering)
+        // Ưu tiên duyệt các ô ở giữa trước để cắt tỉa Alpha-Beta nhanh hơn
         int[] moveOrder = {
                 12, 11, 13, 7, 17, 6, 8, 16, 18,
                 1, 2, 3, 5, 9, 10, 14, 15, 19, 21, 22, 23,

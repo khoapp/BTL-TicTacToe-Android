@@ -32,6 +32,8 @@ public class GameActivity extends AppCompatActivity {
     private Button[] cellButtons;
     private Button btnRestart, btnMenu;
     private CardView cardPlayer1, cardPlayer2;
+    private Button btnP1Block, btnP1Destroy, btnP1Double;
+    private Button btnP2Block, btnP2Destroy, btnP2Double;
 
     // Game logic
     private TicTacToeGame game;
@@ -64,6 +66,7 @@ public class GameActivity extends AppCompatActivity {
 
         initViews();
         setupBoard();
+        setupSkills();
         updateUI();
     }
 
@@ -78,6 +81,14 @@ public class GameActivity extends AppCompatActivity {
         btnMenu = findViewById(R.id.btnMenu);
         cardPlayer1 = findViewById(R.id.cardPlayer1);
         cardPlayer2 = findViewById(R.id.cardPlayer2);
+
+        btnP1Block = findViewById(R.id.btnP1Block);
+        btnP1Destroy = findViewById(R.id.btnP1Destroy);
+        btnP1Double = findViewById(R.id.btnP1Double);
+        
+        btnP2Block = findViewById(R.id.btnP2Block);
+        btnP2Destroy = findViewById(R.id.btnP2Destroy);
+        btnP2Double = findViewById(R.id.btnP2Double);
 
         tvPlayer1Name.setText(username + " (X)");
         tvPlayer2Name.setText(player2Name + " (O)");
@@ -103,19 +114,78 @@ public class GameActivity extends AppCompatActivity {
         btnMenu.setOnClickListener(v -> finish());
     }
 
+    private void setupSkills() {
+        btnP1Block.setOnClickListener(v -> useSkill(TicTacToeGame.PLAYER_X, TicTacToeGame.SKILL_BLOCK, btnP1Block));
+        btnP1Destroy.setOnClickListener(v -> useSkill(TicTacToeGame.PLAYER_X, TicTacToeGame.SKILL_DESTROY, btnP1Destroy));
+        btnP1Double.setOnClickListener(v -> useSkill(TicTacToeGame.PLAYER_X, TicTacToeGame.SKILL_DOUBLE_MOVE, btnP1Double));
+
+        btnP2Block.setOnClickListener(v -> useSkill(TicTacToeGame.PLAYER_O, TicTacToeGame.SKILL_BLOCK, btnP2Block));
+        btnP2Destroy.setOnClickListener(v -> useSkill(TicTacToeGame.PLAYER_O, TicTacToeGame.SKILL_DESTROY, btnP2Destroy));
+        btnP2Double.setOnClickListener(v -> useSkill(TicTacToeGame.PLAYER_O, TicTacToeGame.SKILL_DOUBLE_MOVE, btnP2Double));
+    }
+
+    private void useSkill(int player, int skillType, Button btnSkill) {
+        if (aiTurn) return;
+        if (game.isGameOver()) return;
+        if (game.getCurrentPlayer() != player) {
+            tvGameStatus.setText("Chưa đến lượt của bạn!");
+            return;
+        }
+
+        if (game.useSkill(skillType)) {
+            btnSkill.setEnabled(false);
+            btnSkill.setAlpha(0.5f);
+            
+            if (skillType == TicTacToeGame.SKILL_DESTROY) {
+                tvGameStatus.setText("💣 Vui lòng chọn 1 quân cờ của đối phương để phá!");
+                // Enable opponent's cells for destroying
+                int opponent = (player == TicTacToeGame.PLAYER_X) ? TicTacToeGame.PLAYER_O : TicTacToeGame.PLAYER_X;
+                for (int i = 0; i < 25; i++) {
+                    if (game.getBoard()[i] == opponent) {
+                        cellButtons[i].setEnabled(true);
+                    } else {
+                        cellButtons[i].setEnabled(false);
+                    }
+                }
+            } else if (skillType == TicTacToeGame.SKILL_DOUBLE_MOVE) {
+                tvGameStatus.setText("⚡ Bạn được đánh 2 lần liên tiếp!");
+            } else if (skillType == TicTacToeGame.SKILL_BLOCK) {
+                tvGameStatus.setText("🛡️ Đối phương sẽ bị mất 1 lượt tiếp theo!");
+            }
+            updateUI();
+        }
+    }
+
     private void handleCellClick(int position) {
         if (aiTurn) return; // Chặn click khi AI đang xử lý
         if (game.isGameOver()) return;
-        if (!game.isCellEmpty(position)) return;
+        
+        boolean wasDestroy = game.isDestroyActive();
+
+        if (wasDestroy) {
+            int opponent = (game.getCurrentPlayer() == TicTacToeGame.PLAYER_X) ? TicTacToeGame.PLAYER_O : TicTacToeGame.PLAYER_X;
+            if (game.getBoard()[position] != opponent) return;
+        } else {
+            if (!game.isCellEmpty(position)) return;
+        }
 
         // Thực hiện nước đi
-        game.makeMove(position);
+        if (!game.makeMove(position)) return;
+        
         updateCellUI(position);
+        
+        if (wasDestroy) {
+            tvGameStatus.setText("💣 Phá hủy thành công!");
+            setBoardEnabled(true);
+        } else {
+            tvGameStatus.setText("");
+        }
+        
         updateUI();
 
         if (game.isGameOver()) {
             handleGameOver();
-        } else if (MenuActivity.MODE_AI.equals(gameMode)) {
+        } else if (MenuActivity.MODE_AI.equals(gameMode) && game.getCurrentPlayer() == TicTacToeGame.PLAYER_O) {
             // Đến lượt AI
             aiTurn = true;
             setBoardEnabled(false);
@@ -124,15 +194,54 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void makeAIMove() {
-        int bestMove = aiPlayer.getBestMove(game.getBoard().clone());
-        game.makeMove(bestMove);
-        updateCellUI(bestMove);
-        updateUI();
-        aiTurn = false;
-        setBoardEnabled(true);
+        boolean[] aiSkillsUsed = game.getP2SkillsUsed();
+        AIPlayer.AIAction action = aiPlayer.getBestAction(game.getBoard().clone(), aiSkillsUsed);
 
+        if (action.skillToUse != -1) {
+            if (action.skillToUse == TicTacToeGame.SKILL_DESTROY) {
+                if (btnP2Destroy != null) {
+                    btnP2Destroy.setEnabled(false);
+                    btnP2Destroy.setAlpha(0.5f);
+                }
+                game.useSkill(TicTacToeGame.SKILL_DESTROY);
+                game.makeMove(action.destroyPosition); // phá cờ, mất 1 lượt (của AI)
+                updateCellUI(action.destroyPosition);
+                tvGameStatus.setText("💣 AI đã phá hủy 1 quân cờ của bạn!");
+            } else if (action.skillToUse == TicTacToeGame.SKILL_DOUBLE_MOVE) {
+                if (btnP2Double != null) {
+                    btnP2Double.setEnabled(false);
+                    btnP2Double.setAlpha(0.5f);
+                }
+                game.useSkill(TicTacToeGame.SKILL_DOUBLE_MOVE);
+                tvGameStatus.setText("⚡ AI sử dụng đánh 2 lần!");
+            } else if (action.skillToUse == TicTacToeGame.SKILL_BLOCK) {
+                if (btnP2Block != null) {
+                    btnP2Block.setEnabled(false);
+                    btnP2Block.setAlpha(0.5f);
+                }
+                game.useSkill(TicTacToeGame.SKILL_BLOCK);
+                tvGameStatus.setText("🛡️ AI khóa lượt tiếp theo của bạn!");
+            }
+        }
+
+        if (action.skillToUse != TicTacToeGame.SKILL_DESTROY && action.bestMove != -1) {
+            game.makeMove(action.bestMove);
+            updateCellUI(action.bestMove);
+        }
+
+        updateUI();
+        
         if (game.isGameOver()) {
+            aiTurn = false;
+            setBoardEnabled(true);
             handleGameOver();
+        } else if (game.getCurrentPlayer() == TicTacToeGame.PLAYER_O) {
+            aiTurn = true;
+            setBoardEnabled(false);
+            new Handler().postDelayed(this::makeAIMove, 1000); // Tăng delay xíu để dễ nhìn AI đánh đúp
+        } else {
+            aiTurn = false;
+            setBoardEnabled(true);
         }
     }
 
@@ -141,11 +250,16 @@ public class GameActivity extends AppCompatActivity {
         if (player == TicTacToeGame.PLAYER_X) {
             cellButtons[position].setText("X");
             cellButtons[position].setTextColor(Color.parseColor("#1976D2")); // Xanh dương
+            cellButtons[position].setEnabled(false);
         } else if (player == TicTacToeGame.PLAYER_O) {
             cellButtons[position].setText("O");
             cellButtons[position].setTextColor(Color.parseColor("#D32F2F")); // Đỏ
+            cellButtons[position].setEnabled(false);
+        } else {
+            cellButtons[position].setText("");
+            cellButtons[position].setBackgroundResource(R.drawable.cell_background);
+            cellButtons[position].setEnabled(true);
         }
-        cellButtons[position].setEnabled(false);
     }
 
     private void updateUI() {
@@ -229,6 +343,15 @@ public class GameActivity extends AppCompatActivity {
             btn.setBackgroundResource(R.drawable.cell_background);
             btn.setTextColor(Color.BLACK);
         }
+        
+        Button[] skillBtns = {btnP1Block, btnP1Destroy, btnP1Double, btnP2Block, btnP2Destroy, btnP2Double};
+        for (Button btn : skillBtns) {
+            if (btn != null) {
+                btn.setEnabled(true);
+                btn.setAlpha(1.0f);
+            }
+        }
+        
         tvGameStatus.setText("");
         updateUI();
     }
@@ -237,6 +360,8 @@ public class GameActivity extends AppCompatActivity {
         for (int i = 0; i < 25; i++) {
             if (game.isCellEmpty(i)) {
                 cellButtons[i].setEnabled(enabled);
+            } else {
+                cellButtons[i].setEnabled(false);
             }
         }
     }

@@ -3184,6 +3184,12 @@ int id btnHistory 0x7f080064
 int id btnLogin 0x7f080065
 int id btnLogout 0x7f080066
 int id btnMenu 0x7f080067
+int id btnP1Block 0x7f08023b
+int id btnP1Destroy 0x7f08023c
+int id btnP1Double 0x7f08023d
+int id btnP2Block 0x7f08023e
+int id btnP2Destroy 0x7f08023f
+int id btnP2Double 0x7f080240
 int id btnPlayAI 0x7f080068
 int id btnPlayPVP 0x7f080069
 int id btnRegister 0x7f08006a

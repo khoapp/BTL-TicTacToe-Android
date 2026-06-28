@@ -6,18 +6,32 @@ public class TicTacToeGame {
     public static final int PLAYER_O = 2;
     public static final int EMPTY = 0;
 
+    // Skill indices
+    public static final int SKILL_BLOCK = 0;
+    public static final int SKILL_DESTROY = 1;
+    public static final int SKILL_DOUBLE_MOVE = 2;
+
     private int[] board;         // 25 ô bàn cờ (5x5)
     private int currentPlayer;   // Người đang đánh (PLAYER_X hoặc PLAYER_O)
-    private int movesCount;      // Số nước đã đi
+    private int movesCount;      // Số ô đã bị chiếm
     private int winner;          // Người thắng (0 = chưa có)
     private int[] winningLine;   // 4 ô tạo thành đường thắng (để highlight)
+
+    // Skill tracking
+    private boolean[] p1SkillsUsed;
+    private boolean[] p2SkillsUsed;
+    
+    // Active skill states
+    private boolean opponentBlocked;
+    private int extraMovesRemaining;
+    private boolean isDestroyActive;
 
     public TicTacToeGame() {
         reset();
     }
 
     /**
-     * Đặt lại bàn cờ
+     * Đặt lại bàn cờ và các kỹ năng
      */
     public void reset() {
         board = new int[25];
@@ -25,6 +39,70 @@ public class TicTacToeGame {
         movesCount = 0;
         winner = 0;
         winningLine = null;
+        
+        p1SkillsUsed = new boolean[3];
+        p2SkillsUsed = new boolean[3];
+        opponentBlocked = false;
+        extraMovesRemaining = 0;
+        isDestroyActive = false;
+    }
+
+    /**
+     * Sử dụng kỹ năng
+     * @return true nếu sử dụng thành công
+     */
+    public boolean useSkill(int skillType) {
+        boolean[] currentSkillsUsed = (currentPlayer == PLAYER_X) ? p1SkillsUsed : p2SkillsUsed;
+        
+        if (currentSkillsUsed[skillType]) {
+            return false; // Đã sử dụng
+        }
+        
+        currentSkillsUsed[skillType] = true;
+        
+        if (skillType == SKILL_BLOCK) {
+            opponentBlocked = true;
+            return true;
+        } else if (skillType == SKILL_DOUBLE_MOVE) {
+            extraMovesRemaining = 1; // Thêm 1 lượt đánh
+            return true;
+        } else if (skillType == SKILL_DESTROY) {
+            isDestroyActive = true;
+            return true;
+        }
+        
+        return false;
+    }
+
+    /**
+     * Hủy trạng thái destroy nếu người dùng đổi ý
+     */
+    public void cancelDestroySkill() {
+        if (isDestroyActive) {
+            isDestroyActive = false;
+            // Trả lại kỹ năng chưa dùng
+            boolean[] currentSkillsUsed = (currentPlayer == PLAYER_X) ? p1SkillsUsed : p2SkillsUsed;
+            currentSkillsUsed[SKILL_DESTROY] = false;
+        }
+    }
+
+    /**
+     * Thực hiện phá hủy 1 quân cờ của đối phương
+     */
+    public boolean makeDestroyMove(int position) {
+        if (!isDestroyActive) return false;
+        if (position < 0 || position > 24) return false;
+        
+        int opponent = (currentPlayer == PLAYER_X) ? PLAYER_O : PLAYER_X;
+        if (board[position] != opponent) return false; // Chỉ được phá cờ đối phương
+        
+        board[position] = EMPTY;
+        movesCount--;
+        isDestroyActive = false;
+        
+        // Phá xong thì mất lượt (trừ khi có các hiệu ứng khác)
+        endTurn();
+        return true;
     }
 
     /**
@@ -32,6 +110,10 @@ public class TicTacToeGame {
      * @return true nếu hợp lệ, false nếu ô đã có quân
      */
     public boolean makeMove(int position) {
+        if (isDestroyActive) {
+            return makeDestroyMove(position);
+        }
+
         if (position < 0 || position > 24) return false;
         if (board[position] != EMPTY) return false;
         if (winner != 0) return false;
@@ -40,10 +122,22 @@ public class TicTacToeGame {
         movesCount++;
 
         if (!checkWinner()) {
+            endTurn();
+        }
+        return true;
+    }
+
+    private void endTurn() {
+        if (extraMovesRemaining > 0) {
+            extraMovesRemaining--;
+            // Không đổi người chơi, được đánh tiếp
+        } else if (opponentBlocked) {
+            opponentBlocked = false;
+            // Không đổi người chơi, đối phương mất lượt
+        } else {
             // Đổi lượt
             currentPlayer = (currentPlayer == PLAYER_X) ? PLAYER_O : PLAYER_X;
         }
-        return true;
     }
 
     /**
@@ -128,6 +222,10 @@ public class TicTacToeGame {
         return board[position] == EMPTY;
     }
 
+    public boolean[] getP1SkillsUsed() { return p1SkillsUsed; }
+    public boolean[] getP2SkillsUsed() { return p2SkillsUsed; }
+    public boolean isDestroyActive() { return isDestroyActive; }
+    
     /**
      * Trả về ký hiệu theo player
      */

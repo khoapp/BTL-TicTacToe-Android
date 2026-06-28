@@ -3185,6 +3185,12 @@ id btnHistory
 id btnLogin
 id btnLogout
 id btnMenu
+id btnP1Block
+id btnP1Destroy
+id btnP1Double
+id btnP2Block
+id btnP2Destroy
+id btnP2Double
 id btnPlayAI
 id btnPlayPVP
 id btnRegister

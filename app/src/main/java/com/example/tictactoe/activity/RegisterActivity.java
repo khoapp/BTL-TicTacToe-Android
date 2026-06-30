@@ -70,7 +70,7 @@ public class RegisterActivity extends AppCompatActivity {
             etEmail.requestFocus();
             return;
         }
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if (!email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
             etEmail.setError("Email không hợp lệ");
             etEmail.requestFocus();
             return;
@@ -80,8 +80,8 @@ public class RegisterActivity extends AppCompatActivity {
             etPassword.requestFocus();
             return;
         }
-        if (password.length() < 6) {
-            etPassword.setError("Mật khẩu ít nhất 6 ký tự");
+        if (!password.matches("^[A-Za-z]+[0-9]+[@#$%^&*!]$")) {
+            etPassword.setError("Mật khẩu không đúng định dạng");
             etPassword.requestFocus();
             return;
         }
